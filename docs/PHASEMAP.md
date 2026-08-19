@@ -19,6 +19,10 @@ The phase map may change as Architecture Decision Records (ADRs) add evidence or
 
 ### Phase 1: Project Foundation (`v0.0.0`)
 
+**Implementation status:** Complete.
+
+**Authority status:** This Phase 1 record is authoritative only when the commit containing it is present on `main`.
+
 **Goal:** Establish the rules and structure that all later work must follow.
 
 **Work:**
@@ -33,7 +37,11 @@ The phase map may change as Architecture Decision Records (ADRs) add evidence or
 
 **Exit gate:** The governing documents agree on what AEGIS protects, what it may decide, and what remains outside the product.
 
-**ADR references:** Add when foundation decisions are recorded.
+**Exit evidence:** The governing-document review in [`TASKS.md`](TASKS.md) records agreement on the protected repository, explicit authority, deterministic decisions, fail-closed behavior, human escalation, and the software-design boundary. The read-only foundation validator and its focused tests verify required files, the Keep a Changelog preamble, the initial dated `0.0.0` version, and prohibited `Unreleased` heading variants.
+
+**ADR process:** [`adr/README.md`](adr/README.md) defines the canonical index and [`adr/0000-template.md`](adr/0000-template.md) defines the record template.
+
+**ADR references:** None. Phase 1 establishes the ADR process without making a new architectural decision.
 
 ### Phase 2: Authority Model (`v0.1.0`)
 
