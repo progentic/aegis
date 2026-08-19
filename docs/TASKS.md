@@ -8,7 +8,9 @@ This ledger records verified task results without inventing earlier project hist
 
 ### Phase 1 — Establish the `v0.0.0` Project Foundation
 
-**Status:** Complete
+**Implementation status:** Complete.
+
+**Authority status:** This Phase 1 record is authoritative only when the commit containing it is present on `main`.
 
 **Version target:** `v0.0.0`
 
@@ -38,7 +40,7 @@ No material conflict was found among governance, architecture, invariants, the r
 
 - `python3 -m unittest discover -s tests -p 'test_verify.py'` passes the focused validator tests.
 - `python3 scripts/verify.py` passes the repository foundation checks.
-- Direct changelog checks confirm one dated `0.0.0` heading and no `Unreleased` heading.
+- Direct changelog checks confirm the required preamble, one initial dated `0.0.0` heading, and no prohibited `Unreleased` heading variant.
 - The protected-file comparison confirms that governance, invariants, coding style, architecture, and the roadmap are unchanged by this task.
 - The task adds no backend or user-interface code.
 
@@ -47,3 +49,5 @@ No material conflict was found among governance, architecture, invariants, the r
 The validator checks direct repository facts only. It does not judge prose quality, prove software correctness, or implement runtime enforcement of any invariant.
 
 `v0.0.0` is a version target recorded in the changelog. This task does not tag or publish a release and does not claim production readiness or security.
+
+Phase 1 implementation is complete on `mothra/phase-1-foundation` and ready for human acceptance. Phase 1 becomes part of the authoritative `main` branch only after review and merge.

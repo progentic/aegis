@@ -19,6 +19,12 @@ The format is based on Keep a Changelog, and this project adheres to Semantic Ve
 
 - Established the test fixture.
 """
+UNRELEASED_HEADINGS = (
+    "## [Unreleased]",
+    "## [Unreleased]   ",
+    "## [unreleased]",
+    "## [Unreleased] - Pending",
+)
 
 
 class FoundationValidationTests(unittest.TestCase):
@@ -41,12 +47,36 @@ class FoundationValidationTests(unittest.TestCase):
             issues,
         )
 
-    def test_fails_when_changelog_contains_unreleased_section(self) -> None:
-        write_changelog(self.repository_root, changelog_with_unreleased_section())
+    def test_fails_when_changelog_preamble_is_missing(self) -> None:
+        write_changelog(self.repository_root, changelog_without_preamble())
 
         issues = verify.validate_foundation(self.repository_root)
 
-        self.assertIn(verify.UNRELEASED_MESSAGE, issues)
+        self.assertIn(verify.PREAMBLE_MESSAGE, issues)
+
+    def test_fails_when_changelog_preamble_is_changed(self) -> None:
+        write_changelog(self.repository_root, changelog_with_changed_preamble())
+
+        issues = verify.validate_foundation(self.repository_root)
+
+        self.assertIn(verify.PREAMBLE_MESSAGE, issues)
+
+    def test_fails_for_unreleased_heading_variants_after_zero(self) -> None:
+        for heading in UNRELEASED_HEADINGS:
+            with self.subTest(heading=heading):
+                write_changelog(self.repository_root, append_to_changelog(heading))
+
+                issues = verify.validate_foundation(self.repository_root)
+
+                self.assertIn(verify.UNRELEASED_MESSAGE, issues)
+
+    def test_passes_when_unreleased_appears_only_in_prose(self) -> None:
+        changelog = append_to_changelog(
+            "This prose mentions unreleased work without creating a section."
+        )
+        write_changelog(self.repository_root, changelog)
+
+        self.assertEqual((), verify.validate_foundation(self.repository_root))
 
     def test_fails_when_first_version_is_not_zero(self) -> None:
         write_changelog(self.repository_root, changelog_with_later_version())
@@ -103,11 +133,16 @@ def write_changelog(repository_root: Path, content: str) -> None:
     write_relative_file(repository_root, verify.CHANGELOG_PATH, content)
 
 
-def changelog_with_unreleased_section() -> str:
-    return VALID_CHANGELOG.replace(
-        "## [0.0.0]",
-        "## [Unreleased]\n\n## [0.0.0]",
-    )
+def changelog_without_preamble() -> str:
+    return VALID_CHANGELOG.replace("# Changelog\n\n", "", 1)
+
+
+def changelog_with_changed_preamble() -> str:
+    return VALID_CHANGELOG.replace("Keep a Changelog", "a custom format", 1)
+
+
+def append_to_changelog(content: str) -> str:
+    return f"{VALID_CHANGELOG}\n{content}\n"
 
 
 def changelog_with_later_version() -> str:
