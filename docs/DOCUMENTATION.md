@@ -150,6 +150,8 @@ An ADR should state:
 
 The phase map may change as ADRs refine implementation order. The roadmap changes only through its human-controlled process.
 
+The canonical ADR index is [`docs/adr/README.md`](adr/README.md). Start a new record from [`docs/adr/0000-template.md`](adr/0000-template.md).
+
 ## Required Updates
 
 Update documentation in the same change when work alters:
