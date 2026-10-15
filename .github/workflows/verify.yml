@@ -14,8 +14,6 @@ jobs:
     name: Foundation checks (Linux)
     runs-on: ubuntu-24.04
     timeout-minutes: 10
-    env:
-      PYTHONPYCACHEPREFIX: ${{ runner.temp }}/aegis-python-cache
     steps:
       - name: Check out the exact commit
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -25,8 +23,9 @@ jobs:
 
       - name: Record the tested source
         run: |
+          echo "PYTHONPYCACHEPREFIX=${RUNNER_TEMP}/aegis-python-cache" >> "$GITHUB_ENV"
           echo "Source SHA: $(git rev-parse HEAD)"
-          echo "Source tree: $(git rev-parse HEAD^{tree})"
+          echo "Source tree: $(git rev-parse 'HEAD^{tree}')"
           python3 --version
           uname -sr
 
