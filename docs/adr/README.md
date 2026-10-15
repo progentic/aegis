@@ -53,8 +53,7 @@ An ADR may refine implementation order through the phase map. It cannot silently
 
 ## Decision Index
 
-No decision ADRs exist yet. Phase 1 establishes this process without inventing an architectural decision.
-
 | Identifier | Record | Status |
 | :--- | :--- | :--- |
 | `0000` | [`0000-template.md`](0000-template.md) | Template, not a decision |
+| `0001` | [`0001-deployment-profile-and-threat-model.md`](0001-deployment-profile-and-threat-model.md) | Proposed |
