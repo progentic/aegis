@@ -12,3 +12,5 @@ The format is based on Keep a Changelog, and this project adheres to Semantic Ve
 - Added the Architecture Decision Record process and template.
 - Added deterministic, read-only validation for required Phase 1 files, bootstrap documentation routes, local Markdown references, the Keep a Changelog preamble, the initial `0.0.0` version, and prohibited `Unreleased` headings.
 - Added focused standard-library tests for the foundation validator.
+- Added exact-letter-case checking for local Markdown references and a Linux GitHub Actions workflow that runs the validator tests and foundation checks.
+- Added a foundation-stage status notice to the README and a commit-bound Phase 1 acceptance record.

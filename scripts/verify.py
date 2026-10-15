@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import os
 import re
 import sys
 from dataclasses import dataclass
@@ -68,6 +69,7 @@ BOOTSTRAP_DOCUMENTS = (
 )
 PHASE_ONE_DOCUMENTS = (
     Path("README.md"),
+    Path("docs/acceptance/PHASE-1.md"),
     *(path for path in REQUIRED_PHASE_ONE_FILES if path.suffix == ".md"),
 )
 IGNORED_LINK_SCHEMES = frozenset(("http", "https", "mailto"))
@@ -84,6 +86,7 @@ REFERENCE_DEFINITION_PATTERN = re.compile(
 )
 MARKDOWN_ESCAPE_PATTERN = re.compile(r"\\([^\w\s])")
 MISSING_TARGET = "missing target"
+WRONG_CASE_TARGET = "case-mismatched target"
 OUTSIDE_REPOSITORY = "target outside repository"
 
 
@@ -92,6 +95,7 @@ class MarkdownReference:
     source: Path
     original: str
     target: Path
+    lexical: Path
 
 
 class DocumentReferenceError(RuntimeError):
@@ -196,6 +200,8 @@ def validate_reference(root: Path, reference: MarkdownReference) -> tuple[str, .
         return (describe_reference(reference, OUTSIDE_REPOSITORY),)
     if not target_exists(reference.target):
         return (describe_reference(reference, MISSING_TARGET),)
+    if not has_exact_case(root, reference.lexical):
+        return (describe_reference(reference, WRONG_CASE_TARGET),)
     return ()
 
 
@@ -237,8 +243,10 @@ def resolve_markdown_references(
     for original in extract_markdown_destinations(text):
         path = local_reference_path(original)
         if path is not None:
-            target = (root / source.parent / path).resolve()
-            references.append(MarkdownReference(source, original, target))
+            joined = root / source.parent / path
+            target = joined.resolve()
+            lexical = Path(os.path.normpath(joined))
+            references.append(MarkdownReference(source, original, target, lexical))
     return tuple(references)
 
 
@@ -311,6 +319,27 @@ def is_within_repository(root: Path, target: Path) -> bool:
 
 def target_exists(target: Path) -> bool:
     return target.is_file() or target.is_dir()
+
+
+def has_exact_case(root: Path, lexical: Path) -> bool:
+    # Case-insensitive filesystems accept a link such as governance.md for
+    # GOVERNANCE.md, but Linux and GitHub do not. Compare each path component
+    # with the real directory listing so the result does not depend on the
+    # filesystem running the check.
+    try:
+        parts = lexical.relative_to(root).parts
+    except ValueError:
+        return True  # A target outside the repository is reported separately.
+    current = root
+    for part in parts:
+        try:
+            names = os.listdir(current)
+        except OSError:
+            return False
+        if part not in names:
+            return False
+        current = current / part
+    return True
 
 
 def describe_reference(reference: MarkdownReference, reason: str) -> str:

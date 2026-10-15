@@ -3,6 +3,7 @@ from __future__ import annotations
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 from scripts import verify
 
@@ -150,6 +151,21 @@ class MarkdownReferenceValidationTests(unittest.TestCase):
 
     def test_corrected_candidate_document_set_passes(self) -> None:
         self.assertEqual((), verify.validate_foundation(verify.locate_repository_root()))
+
+    def test_acceptance_record_local_references_are_checked(self) -> None:
+        source = Path("docs/acceptance/PHASE-1.md")
+        write_relative_file(self.repository_root, source, "[Missing](missing.md)")
+
+        issues = verify.validate_foundation(self.repository_root)
+
+        self.assertTrue(
+            any(
+                str(source) in issue
+                and "'missing.md'" in issue
+                and "missing target" in issue
+                for issue in issues
+            )
+        )
 
     def test_missing_relative_target_reports_source_reference_and_target(self) -> None:
         write_reference_document(self.repository_root, "[Missing](missing.md)")
@@ -312,6 +328,38 @@ class MarkdownReferenceValidationTests(unittest.TestCase):
         ):
             with self.subTest(text=text):
                 write_reference_document(self.repository_root, text)
+                self.assertEqual((), verify.validate_foundation(self.repository_root))
+
+    def test_exact_case_check_does_not_depend_on_the_filesystem(self) -> None:
+        root = self.repository_root
+        self.assertTrue(verify.has_exact_case(root, root / "docs/GOVERNANCE.md"))
+        self.assertTrue(verify.has_exact_case(root, root / "docs/governance"))
+        for wrong in ("docs/governance.md", "Docs/GOVERNANCE.md", "docs/Governance"):
+            with self.subTest(path=wrong):
+                self.assertFalse(verify.has_exact_case(root, root / wrong))
+
+    def test_wrong_case_reference_fails_on_every_filesystem(self) -> None:
+        write_reference_document(self.repository_root, "[Wrong](governance.md)")
+        issues = verify.validate_foundation(self.repository_root)
+        self.assertTrue(
+            any(
+                "'governance.md'" in issue
+                and ("missing target" in issue or "case-mismatched target" in issue)
+                for issue in issues
+            )
+        )
+
+    def test_wrong_case_is_reported_when_the_filesystem_accepts_it(self) -> None:
+        # Simulate a case-insensitive filesystem: the wrong-case target "exists".
+        write_reference_document(self.repository_root, "[Wrong](governance.md)")
+        with mock.patch.object(verify, "target_exists", return_value=True):
+            issues = verify.validate_foundation(self.repository_root)
+        self.assertTrue(any("case-mismatched target" in issue for issue in issues))
+
+    def test_dot_segments_and_trailing_slashes_keep_exact_case(self) -> None:
+        for reference in ("./GOVERNANCE.md", "governance/../GOVERNANCE.md", "governance/"):
+            with self.subTest(reference=reference):
+                write_reference_document(self.repository_root, f"[Valid]({reference})")
                 self.assertEqual((), verify.validate_foundation(self.repository_root))
 
     def test_link_validation_is_deterministic_and_read_only(self) -> None:

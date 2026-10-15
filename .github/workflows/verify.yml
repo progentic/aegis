@@ -1,0 +1,45 @@
+name: Verify foundation
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: Foundation checks (Linux)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      PYTHONPYCACHEPREFIX: ${{ runner.temp }}/aegis-python-cache
+    steps:
+      - name: Check out the exact commit
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+
+      - name: Record the tested source
+        run: |
+          echo "Source SHA: $(git rev-parse HEAD)"
+          echo "Source tree: $(git rev-parse HEAD^{tree})"
+          python3 --version
+          uname -sr
+
+      - name: Run validator tests
+        run: python3 -m unittest discover -s tests -p 'test_verify.py' -v
+
+      - name: Run foundation validation
+        run: python3 scripts/verify.py
+
+      - name: Compile validator and tests
+        run: python3 -m compileall scripts tests
+
+      - name: Verify checked-out source is unchanged
+        run: |
+          git diff --exit-code
+          test -z "$(git ls-files --others --exclude-standard)"

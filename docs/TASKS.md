@@ -49,6 +49,10 @@ No material conflict was found among governance, architecture, invariants, the r
 
 The validator checks direct repository facts only. It does not judge prose quality, validate external links or semantic anchors, prove software correctness, or implement runtime enforcement of any invariant.
 
+Local-reference validation covers Markdown inline links, image destinations, and reference definitions. Raw HTML attributes and other markup forms are not checked. Each local reference must match the exact letter case of the target path, so a reference that only works on a case-insensitive filesystem fails.
+
+A failing validator exit code reports a problem. It does not prevent repository changes or publication; runtime enforcement of `INV-007` is not implemented.
+
 `v0.0.0` is a version target recorded in the changelog. This task does not tag or publish a release and does not claim production readiness or security.
 
-Phase 1 implementation is complete on `mothra/phase-1-foundation` and ready for human acceptance. Phase 1 becomes part of the authoritative `main` branch only after review and merge.
+Phase 1 implementation, including the routing correction, is published on `main` at commit `d24271eb380029545c631d4a7cc21709c59722a1`. Named human acceptance of Phase 1 has not been recorded. The acceptance checklist and record are in [`acceptance/PHASE-1.md`](acceptance/PHASE-1.md).
