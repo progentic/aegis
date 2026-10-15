@@ -6,7 +6,7 @@ An invariant is a rule that must remain true while AEGIS operates.
 
 These invariants protect the authority boundary between an LLM and the authoritative repository. They apply to every implementation, policy profile, interface, and repository adapter.
 
-[`GOVERNANCE.md`](../GOVERNANCE.md) takes precedence over this document. [`ARCHITECTURE.md`](../ARCHITECTURE.md) defines the system that must preserve these rules.
+[`GOVERNANCE.md`](GOVERNANCE.md) takes precedence over this document. [`ARCHITECTURE.md`](ARCHITECTURE.md) defines the system that must preserve these rules.
 
 ## Authority Invariants
 

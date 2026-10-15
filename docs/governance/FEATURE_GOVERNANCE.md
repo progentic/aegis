@@ -203,4 +203,4 @@ Feature review should produce one of three results:
 
 ## Governance Precedence
 
-No feature approval may override the constitutional rules in the repository root `GOVERNANCE.md`.
+No feature approval may override the constitutional rules in [`GOVERNANCE.md`](../GOVERNANCE.md).

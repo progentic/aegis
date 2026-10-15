@@ -37,7 +37,7 @@ The phase map may change as Architecture Decision Records (ADRs) add evidence or
 
 **Exit gate:** The governing documents agree on what AEGIS protects, what it may decide, and what remains outside the product.
 
-**Exit evidence:** The governing-document review in [`TASKS.md`](TASKS.md) records agreement on the protected repository, explicit authority, deterministic decisions, fail-closed behavior, human escalation, and the software-design boundary. The read-only foundation validator and its focused tests verify required files, the Keep a Changelog preamble, the initial dated `0.0.0` version, and prohibited `Unreleased` heading variants.
+**Exit evidence:** The governing-document review in [`TASKS.md`](TASKS.md) records agreement on the protected repository, explicit authority, deterministic decisions, fail-closed behavior, human escalation, and the software-design boundary. The read-only foundation validator and its focused tests verify required files, bootstrap documentation routes, local Markdown references within the repository, the Keep a Changelog preamble, the initial dated `0.0.0` version, and prohibited `Unreleased` heading variants.
 
 **ADR process:** [`adr/README.md`](adr/README.md) defines the canonical index and [`adr/0000-template.md`](adr/0000-template.md) defines the record template.
 

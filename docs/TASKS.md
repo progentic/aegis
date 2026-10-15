@@ -41,12 +41,13 @@ No material conflict was found among governance, architecture, invariants, the r
 - `python3 -m unittest discover -s tests -p 'test_verify.py'` passes the focused validator tests.
 - `python3 scripts/verify.py` passes the repository foundation checks.
 - Direct changelog checks confirm the required preamble, one initial dated `0.0.0` heading, and no prohibited `Unreleased` heading variant.
-- The protected-file comparison confirms that governance, invariants, coding style, architecture, and the roadmap are unchanged by this task.
+- Local Markdown reference checks confirm that bootstrap routes and documentation targets resolve within the repository.
+- The protected-file comparison confirms that the routing corrections preserve governance and invariant meaning; coding style, architecture, and the roadmap are unchanged.
 - The task adds no backend or user-interface code.
 
 #### Limits
 
-The validator checks direct repository facts only. It does not judge prose quality, prove software correctness, or implement runtime enforcement of any invariant.
+The validator checks direct repository facts only. It does not judge prose quality, validate external links or semantic anchors, prove software correctness, or implement runtime enforcement of any invariant.
 
 `v0.0.0` is a version target recorded in the changelog. This task does not tag or publish a release and does not claim production readiness or security.
 

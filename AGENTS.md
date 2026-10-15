@@ -2,13 +2,13 @@
 
 Before every agent run:
 
-1. Read `ARCHITECTURE.md`.
-2. Read `GOVERNANCE.md`.
-3. Read all applicable files in `governance/`:
-   - `AUTHORITY_GOVERNANCE.md`
-   - `BOUNDARY_GOVERNANCE.md`
-   - `ESCALATION_GOVERNANCE.md`
-   - `FEATURE_GOVERNANCE.md`
+1. Read [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
+2. Read [`docs/GOVERNANCE.md`](docs/GOVERNANCE.md).
+3. Read all applicable files in [`docs/governance/`](docs/governance/):
+   - [`docs/governance/AUTHORITY_GOVERNANCE.md`](docs/governance/AUTHORITY_GOVERNANCE.md)
+   - [`docs/governance/BOUNDARY_GOVERNANCE.md`](docs/governance/BOUNDARY_GOVERNANCE.md)
+   - [`docs/governance/ESCALATION_GOVERNANCE.md`](docs/governance/ESCALATION_GOVERNANCE.md)
+   - [`docs/governance/FEATURE_GOVERNANCE.md`](docs/governance/FEATURE_GOVERNANCE.md)
 4. Follow explicit task scope and authorized write boundaries.
 5. Do not infer permission from silence or ambiguity.
 6. If an action conflicts with governance, exceeds scope, or cannot be deterministically authorized, stop and escalate to the human.

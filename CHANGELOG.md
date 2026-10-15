@@ -10,5 +10,5 @@ The format is based on Keep a Changelog, and this project adheres to Semantic Ve
 
 - Established the initial AEGIS project foundation and Phase 1 exit evidence.
 - Added the Architecture Decision Record process and template.
-- Added deterministic, read-only validation for required Phase 1 files, the Keep a Changelog preamble, the initial `0.0.0` version, and prohibited `Unreleased` headings.
+- Added deterministic, read-only validation for required Phase 1 files, bootstrap documentation routes, local Markdown references, the Keep a Changelog preamble, the initial `0.0.0` version, and prohibited `Unreleased` headings.
 - Added focused standard-library tests for the foundation validator.
