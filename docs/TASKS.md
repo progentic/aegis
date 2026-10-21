@@ -6,6 +6,19 @@ This ledger records verified task results without inventing earlier project hist
 
 ## Task Results
 
+### Workflow Lint and Next Phase 2 Contract
+
+The `GitHub Actions Lint` job runs actionlint 1.7.12 from a checksum-pinned
+release archive before foundation and Rust checks. Both jobs passed for source
+commit `c3a7ae2a16b59fb0ffb51a8c9ac4daf5f39da71d`, including the existing 34 tests;
+see the [main-branch CI run](https://github.com/progentic/aegis/actions/runs/39679336083).
+
+[ADR 0003](adr/0003-authority-contract.md) is the next Phase 2 task proposal.
+It requests explicit approval for strict JSON inputs, exact-path scope rules,
+policy/task capability validation, and pinned JSON-parser dependencies.
+It is Proposed, not Accepted. No parser or permission semantics are implemented
+by this documentation change, and Phase 2 remains partial.
+
 ### Phase 2 — Initial Rust Authority Input Types
 
 **Implementation status:** Partial; not Phase 2 acceptance or a `v0.1.0` release.

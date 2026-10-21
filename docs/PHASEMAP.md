@@ -64,6 +64,10 @@ and the Phase 2 exit gate remain unimplemented.
 initial data-only library. Add separate scope, capability, and policy-format
 decisions before implementing those semantics.
 
+**Next task:** [ADR 0003](adr/0003-authority-contract.md) proposes the initial
+policy/task-scope format and capability rules. It is not approved; parser and
+authority-validation implementation must wait for explicit approval.
+
 ### Phase 3: Decision Core (`v0.2.0`)
 
 **Goal:** Decide whether a proposed action has authority.
