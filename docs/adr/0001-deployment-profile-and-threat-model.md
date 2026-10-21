@@ -2,9 +2,9 @@
 
 ## Status
 
-Proposed
+Accepted
 
-Recommendations 1-3 were confirmed by the human task instruction on 2026-10-15. The named approving human remains unresolved, so this record is not yet `Accepted`.
+Recommendations 1-3 were confirmed by the human task instruction on 2026-10-15. The repository owner explicitly approved ADR 0001 on 2026-10-21 with the instruction: "approve ADR-0001". Approval applies to this decision, not to Phase 1 acceptance or production admission.
 
 ## Date
 
@@ -12,7 +12,7 @@ Recommendations 1-3 were confirmed by the human task instruction on 2026-10-15. 
 
 ## Decision Owners
 
-Not yet named. The repository owner must name the approving human before this record becomes `Accepted`.
+Repository owner `progentic` (GitHub display name: Proto). The account identity was checked when recording the human approval. The approved proposal is commit `250af83f4f89d93b06f3b9b708ebbaad0bc3ba95`, tree `562cc1c0c61ff0f53d023888cece469059c62d89`.
 
 ## Phase and Version
 
@@ -28,18 +28,18 @@ This record adds trust assumptions. It does not weaken, replace, or reword any i
 
 AEGIS controls what an LLM may change in a repository. A library check cannot stop another process that has filesystem permission from writing directly. `INV-001` therefore needs an operating-system boundary, and that boundary depends on the platform.
 
-No runtime, executor, or installer exists on `main`. Until this decision is approved, no component can be named as the trusted mediator, and `v0.3.0` cannot be tested against a real boundary.
+No runtime, executor, or installer exists on `main` at approval. This decision defines the intended trusted mediator identity; it does not implement that component or prove the `v0.3.0` boundary.
 
 ## Decision
 
-The following records the confirmed direction for recommendations 1-3. Final ADR acceptance still requires the named decision owner. Recommendation 4, naming the approver for this ADR and the Phase 1 acceptance record, remains pending.
+The following records the accepted direction. The repository owner's approval resolves this ADR's decision owner only; the separate Phase 1 acceptance record remains pending.
 
 | Recommendation | Recorded direction | Status |
 | :--- | :--- | :--- |
 | 1. Production platform | Linux only; one distribution/version, Ubuntu 24.04 LTS, for the initial profile | Confirmed direction; runtime validation pending |
 | 2. Machine/user scope | One human operator on a trusted-admin machine, with three separate service identities | Confirmed |
 | 3. Supply-chain assessment | Comprehensive review at `v0.9.0`; pinned inputs and controlled builds from the first runtime implementation | Confirmed |
-| 4. Approving human | Not yet named | Pending; blocks final ADR acceptance |
+| 4. Approving human | Repository owner `progentic` (Proto) | ADR accepted on 2026-10-21; Phase 1 acceptance remains separate |
 
 ### Adversaries in scope
 
