@@ -8,6 +8,7 @@ The format is based on Keep a Changelog, and this project adheres to Semantic Ve
 
 ### Added
 
+- Added a checksum-pinned GitHub Actions Lint job that must pass before foundation and Rust checks run.
 - Added the ADR 0002-approved, dependency-free Rust authority input types, pinned toolchain, lockfile, representation tests, and Linux build checks; no runtime enforcement is implemented.
 - Established the initial AEGIS project foundation and Phase 1 exit evidence.
 - Added the Architecture Decision Record process and template.
