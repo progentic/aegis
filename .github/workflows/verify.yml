@@ -24,6 +24,7 @@ jobs:
       - name: Record the tested source
         run: |
           echo "PYTHONPYCACHEPREFIX=${RUNNER_TEMP}/aegis-python-cache" >> "$GITHUB_ENV"
+          echo "CARGO_TARGET_DIR=${RUNNER_TEMP}/aegis-target" >> "$GITHUB_ENV"
           echo "Source SHA: $(git rev-parse HEAD)"
           echo "Source tree: $(git rev-parse 'HEAD^{tree}')"
           python3 --version
@@ -37,6 +38,17 @@ jobs:
 
       - name: Compile validator and tests
         run: python3 -m compileall scripts tests
+
+      - name: Check Rust authority types
+        run: |
+          rustup show active-toolchain
+          rustc --version --verbose
+          cargo --version
+          cargo fmt --all -- --check
+          cargo clippy --locked --offline --all-targets -- -D warnings
+          cargo test --locked --offline
+          cargo build --locked --offline
+          sha256sum "${CARGO_TARGET_DIR}/debug/libaegis_authority.rlib"
 
       - name: Verify checked-out source is unchanged
         run: |

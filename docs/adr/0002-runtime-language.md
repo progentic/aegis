@@ -2,7 +2,8 @@
 
 ## Status
 
-Proposed. ADR 0001 approval does not approve this separate decision.
+Accepted. The human explicitly approved ADR 0002 for the Rust runtime on
+2026-10-21 and authorized the first implementation.
 
 ## Date
 
@@ -10,7 +11,10 @@ Proposed. ADR 0001 approval does not approve this separate decision.
 
 ## Decision Owners
 
-Repository owner `progentic` (Proto). Runtime-language approval is pending.
+Repository owner `progentic` (Proto). Approval source: "I approve ADR-0002 for
+Rust Runtime, proceed with implementation." The approved proposal is commit
+`c55271102e55656f85909aa104c9bcf82ee7950f`, tree
+`62c25f180b11907ce1d42a1b4d19946f38b109b5`.
 
 ## Phase and Version
 
@@ -30,10 +34,10 @@ decision. The existing Python foundation validator is not a runtime selection.
 
 ## Decision
 
-Propose Rust for the authority contracts and subsequent trusted runtime.
+Use Rust for the authority contracts and subsequent trusted runtime.
 Keep Python for existing read-only foundation tooling.
 
-The first implementation would be a small dependency-free library of authority
+The first implementation is a small dependency-free library of authority
 contract types, without a daemon, repository writes, executor isolation, or
 claims that the Phase 2 exit gate is satisfied. Policy serialization and
 capability semantics require their own recorded contract decisions.
@@ -54,7 +58,7 @@ follow ADR 0001's controlled-build and provenance requirements.
 - Rust types can represent distinct authority inputs without an execution API.
 - Maintainers need a Rust toolchain in addition to the Python foundation tools.
 - Language choice alone does not enforce authority or operating-system isolation.
-- Implementation waits for explicit approval of this language decision.
+- The first library represents unvalidated inputs; its types do not grant authority.
 
 ## Validation Evidence
 

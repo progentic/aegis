@@ -8,6 +8,7 @@ The format is based on Keep a Changelog, and this project adheres to Semantic Ve
 
 ### Added
 
+- Added the ADR 0002-approved, dependency-free Rust authority input types, pinned toolchain, lockfile, representation tests, and Linux build checks; no runtime enforcement is implemented.
 - Established the initial AEGIS project foundation and Phase 1 exit evidence.
 - Added the Architecture Decision Record process and template.
 - Added deterministic, read-only validation for required Phase 1 files, bootstrap documentation routes, local Markdown references, the Keep a Changelog preamble, the initial `0.0.0` version, and prohibited `Unreleased` headings.

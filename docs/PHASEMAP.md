@@ -45,6 +45,9 @@ The phase map may change as Architecture Decision Records (ADRs) add evidence or
 
 ### Phase 2: Authority Model (`v0.1.0`)
 
+**Implementation status:** Partial. Rust input types exist; authority validation
+and the Phase 2 exit gate remain unimplemented.
+
 **Goal:** Represent human-granted authority without inference.
 
 **Work:**
@@ -57,7 +60,9 @@ The phase map may change as Architecture Decision Records (ADRs) add evidence or
 
 **Exit gate:** The same scope and policy input produces the same validated authority set. The model cannot enlarge it.
 
-**ADR references:** Add for scope, capability, and policy-format decisions.
+**ADR references:** [ADR 0002](adr/0002-runtime-language.md) selects Rust for the
+initial data-only library. Add separate scope, capability, and policy-format
+decisions before implementing those semantics.
 
 ### Phase 3: Decision Core (`v0.2.0`)
 

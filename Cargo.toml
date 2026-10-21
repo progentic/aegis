@@ -1,0 +1,10 @@
+[package]
+name = "aegis-authority"
+version = "0.0.0"
+edition = "2024"
+rust-version = "1.96"
+publish = false
+description = "Unvalidated authority input types; no runtime enforcement"
+
+[lints.rust]
+unsafe_code = "forbid"

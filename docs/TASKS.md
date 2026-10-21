@@ -6,6 +6,26 @@ This ledger records verified task results without inventing earlier project hist
 
 ## Task Results
 
+### Phase 2 — Initial Rust Authority Input Types
+
+**Implementation status:** Partial; not Phase 2 acceptance or a `v0.1.0` release.
+
+**Approval:** The human approved [ADR 0002](adr/0002-runtime-language.md) on
+2026-10-21 and authorized the minimal dependency-free implementation.
+
+**Scope:** `src/lib.rs` represents task scope, policy references, separate path
+lists, capability variants, and protected-action categories as unvalidated data.
+Rust 1.96.0 is pinned; the dependency-free Cargo lockfile is committed.
+
+**Checks:** Formatting, Clippy, compilation, three focused representation tests,
+and the existing Python foundation checks. Linux CI records the source commit,
+tree, toolchain versions, and library artifact checksum for its exact checkout.
+
+**Limits:** No parsing, authority validation, approval authentication, permission
+matching, permit issuance, decision engine, repository mediation, or isolation.
+Public fields are not evidence of approval. All runtime invariants remain
+unimplemented. Policy format and capability semantics need separate decisions.
+
 ### Phase 1 — Establish the `v0.0.0` Project Foundation
 
 **Implementation status:** Complete.
