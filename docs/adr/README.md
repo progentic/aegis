@@ -57,3 +57,4 @@ An ADR may refine implementation order through the phase map. It cannot silently
 | :--- | :--- | :--- |
 | `0000` | [`0000-template.md`](0000-template.md) | Template, not a decision |
 | `0001` | [`0001-deployment-profile-and-threat-model.md`](0001-deployment-profile-and-threat-model.md) | Accepted |
+| `0002` | [`0002-runtime-language.md`](0002-runtime-language.md) | Proposed |
