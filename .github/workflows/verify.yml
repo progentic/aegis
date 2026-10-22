@@ -72,6 +72,7 @@ jobs:
           rustup show active-toolchain
           rustc --version --verbose
           cargo --version
+          cargo fetch --locked
           cargo fmt --all -- --check
           cargo clippy --locked --offline --all-targets -- -D warnings
           cargo test --locked --offline

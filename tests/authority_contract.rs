@@ -1,4 +1,6 @@
-use aegis_authority::{Capability, PathScope, PolicyReference, ProtectedAction, TaskScope};
+use aegis_authority::{
+    Capability, PathScope, PolicyReference, ProtectedAction, ProtectedGrant, TaskScope,
+};
 
 #[test]
 fn path_capability_variants_remain_distinct() {
@@ -13,11 +15,11 @@ fn path_capability_variants_remain_distinct() {
 
 #[test]
 fn protected_capability_retains_its_target() {
-    let capability = Capability::ProtectedAction {
+    let capability = Capability::ProtectedAction(ProtectedGrant {
         action: ProtectedAction::DependencyChange,
         target: String::from("Cargo.toml"),
-    };
-    let Capability::ProtectedAction { action, target } = capability else {
+    });
+    let Capability::ProtectedAction(ProtectedGrant { action, target }) = capability else {
         panic!("protected action shape was lost");
     };
     assert_eq!(action, ProtectedAction::DependencyChange);

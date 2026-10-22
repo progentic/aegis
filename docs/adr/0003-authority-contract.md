@@ -2,7 +2,8 @@
 
 ## Status
 
-Proposed. No implementation authority is granted by this record.
+Accepted. The human approved this ADR and its parser/authority-validator
+implementation on 2026-10-21 by answering "yes" to that explicit approval request.
 
 ## Date
 
@@ -10,7 +11,9 @@ Proposed. No implementation authority is granted by this record.
 
 ## Decision Owners
 
-Repository owner `progentic` (Proto). Explicit approval is pending.
+Repository owner `progentic` (Proto). The approved proposal is commit
+`946a046eaa9a99c066dde63e9bf4e0465dc139cf`, tree
+`67d4278e88cb83da3393a40a3ef23c1e3f56e85b`.
 
 ## Phase and Version
 
@@ -31,7 +34,7 @@ Phase 3 decision engine.
 
 ## Decision
 
-Propose the following initial contract:
+Use the following initial contract:
 
 - Use versioned JSON for human-owned policy and human-approved task scope.
   Require all authority fields explicitly; empty lists represent no grants.
@@ -60,7 +63,7 @@ Propose the following initial contract:
   unknown invariant identifiers. Canonicalize set order for deterministic
   comparison; reject duplicate entries rather than silently discarding them.
 - Use `serde` and `serde_json` for JSON parsing instead of writing a parser.
-  Approval of this ADR would authorize these dependencies, pinned with their
+  Approval of this ADR authorizes these dependencies, pinned with their
   transitive inputs in `Cargo.lock`. Duplicate-key rejection must be explicit;
   parsing into a map that silently replaces an earlier key is insufficient.
 
@@ -73,7 +76,7 @@ Propose the following initial contract:
 
 ## Consequences
 
-Approval would authorize the strict parser and pure contract validation only.
+Approval authorizes the strict parser and pure contract validation only.
 No repository writes, decision engine, elevation workflow, permit lifecycle,
 or executor isolation would be implemented under this decision.
 

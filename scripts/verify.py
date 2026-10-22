@@ -70,6 +70,7 @@ BOOTSTRAP_DOCUMENTS = (
 PHASE_ONE_DOCUMENTS = (
     Path("README.md"),
     Path("docs/acceptance/PHASE-1.md"),
+    Path("docs/AUTHORITY_CONTRACT.md"),
     *(path for path in REQUIRED_PHASE_ONE_FILES if path.suffix == ".md"),
 )
 IGNORED_LINK_SCHEMES = frozenset(("http", "https", "mailto"))

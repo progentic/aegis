@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "repository_id": "example/repository",
+  "policy": {"owner": "human-owner", "version": "policy-1", "reference": "immutable-policy-1"},
+  "paths": {"read": ["src/a.rs", "src/b.rs"], "write": ["src/a.rs"], "create": ["tests/new.rs"]},
+  "capabilities": [
+    {"ReadPath": "src/a.rs"},
+    {"ReadPath": "src/b.rs"},
+    {"WritePath": "src/a.rs"},
+    {"CreatePath": "tests/new.rs"},
+    {"ProtectedAction": {"action": "DependencyChange", "target": "Cargo.toml"}}
+  ],
+  "invariants": ["INV-007", "INV-002"]
+}

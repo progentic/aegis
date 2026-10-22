@@ -45,8 +45,9 @@ The phase map may change as Architecture Decision Records (ADRs) add evidence or
 
 ### Phase 2: Authority Model (`v0.1.0`)
 
-**Implementation status:** Partial. Rust input types exist; authority validation
-and the Phase 2 exit gate remain unimplemented.
+**Implementation status:** Contract implementation ready for acceptance.
+Strict parsing and pure policy/task/approval validation are implemented;
+human acceptance and runtime enforcement are not implied.
 
 **Goal:** Represent human-granted authority without inference.
 
@@ -61,12 +62,14 @@ and the Phase 2 exit gate remain unimplemented.
 **Exit gate:** The same scope and policy input produces the same validated authority set. The model cannot enlarge it.
 
 **ADR references:** [ADR 0002](adr/0002-runtime-language.md) selects Rust for the
-initial data-only library. Add separate scope, capability, and policy-format
-decisions before implementing those semantics.
+initial library. [ADR 0003](adr/0003-authority-contract.md) defines the accepted
+JSON format, exact-path bounds, and capability-validation contract.
 
-**Next task:** [ADR 0003](adr/0003-authority-contract.md) proposes the initial
-policy/task-scope format and capability rules. It is not approved; parser and
-authority-validation implementation must wait for explicit approval.
+**Exit evidence:** The [contract reference](AUTHORITY_CONTRACT.md) maps the API,
+trust preconditions, and tests. Repeated inputs and reordered sets produce the
+same validated contract; changed scope cannot reuse the trusted approval.
+This is a pure contract guarantee assuming independently trusted policy and
+approval inputs, not proof of a model-facing enforcement boundary.
 
 ### Phase 3: Decision Core (`v0.2.0`)
 

@@ -6,6 +6,32 @@ This ledger records verified task results without inventing earlier project hist
 
 ## Task Results
 
+### Phase 2 — Strict Parser and Pure Contract Validation
+
+**Implementation status:** Ready for human acceptance of the contract work;
+not a production release or runtime-enforcement acceptance.
+
+**Approval:** The human approved ADR 0003 and implementation on 2026-10-21.
+The approved proposal is `946a046eaa9a99c066dde63e9bf4e0465dc139cf`.
+
+**Implemented:** Versioned, strict JSON parsing; required identity fields;
+exact-path syntax; separate read/write/create and protected capabilities;
+policy ceiling checks; complete approved-scope comparison; invariant-ID and
+required-invariant validation; deterministic immutable contract output.
+
+**Evidence:** 22 contract test functions with table-driven rejection cases,
+three original Rust representation tests, and 32 Python foundation tests
+(including reference coverage for the new contract document).
+Formatting, Clippy, compilation, documentation validation, and workflow lint
+are required. Linux CI checks the exact commit and records build provenance.
+See [AUTHORITY_CONTRACT.md](AUTHORITY_CONTRACT.md) for fixtures and API details.
+
+**Limits:** The caller must supply independently trusted policy and approved
+scope. String identity is not authentication. No trusted-state loader,
+decision engine, permit, executor, or repository mediation is implemented.
+All runtime invariants remain unimplemented. Phase 2 human acceptance is not
+recorded by this implementation result.
+
 ### Workflow Lint and Next Phase 2 Contract
 
 The `GitHub Actions Lint` job runs actionlint 1.7.12 from a checksum-pinned
@@ -13,11 +39,11 @@ release archive before foundation and Rust checks. Both jobs passed for source
 commit `c3a7ae2a16b59fb0ffb51a8c9ac4daf5f39da71d`, including the existing 34 tests;
 see the [main-branch CI run](https://github.com/progentic/aegis/actions/runs/39679336083).
 
-[ADR 0003](adr/0003-authority-contract.md) is the next Phase 2 task proposal.
+[ADR 0003](adr/0003-authority-contract.md) was the next Phase 2 task proposal.
 It requests explicit approval for strict JSON inputs, exact-path scope rules,
 policy/task capability validation, and pinned JSON-parser dependencies.
-It is Proposed, not Accepted. No parser or permission semantics are implemented
-by this documentation change, and Phase 2 remains partial.
+It was Proposed at that source revision. The later implementation record above
+records its subsequent human approval without changing this historical result.
 
 ### Phase 2 — Initial Rust Authority Input Types
 

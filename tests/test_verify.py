@@ -73,6 +73,17 @@ class FoundationValidationTests(unittest.TestCase):
     def test_passes_when_required_files_are_present(self) -> None:
         self.assertEqual((), verify.validate_foundation(self.repository_root))
 
+    def test_checks_authority_contract_document_links(self) -> None:
+        write_relative_file(
+            self.repository_root,
+            Path("docs/AUTHORITY_CONTRACT.md"),
+            "[Missing](missing-contract.md)",
+        )
+        issues = verify.validate_foundation(self.repository_root)
+        self.assertEqual(1, len(issues))
+        self.assertIn("docs/AUTHORITY_CONTRACT.md", issues[0])
+        self.assertIn("missing-contract.md", issues[0])
+
     def test_fails_when_required_file_is_missing(self) -> None:
         remove_relative_file(self.repository_root, Path("docs/ROADMAP.md"))
 
