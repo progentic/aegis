@@ -149,6 +149,8 @@ activemq-data/
 
 # Environments
 .env
+.env.*
+!.env.example
 .envrc
 .venv
 env/
@@ -216,3 +218,12 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Local credentials and control-state output are never release inputs.
+*.pem
+*.key
+*.p12
+*.pfx
+credentials.json
+service-account*.json
+/evidence/

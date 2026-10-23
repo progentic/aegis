@@ -1,5 +1,8 @@
-use crate::{Capability, PathScope, PolicyDocument, PolicyReference, TaskDocument, json};
-use std::fmt;
+use crate::{
+    Capability, ContractError, PathScope, PolicyDocument, PolicyReference, TaskDocument, json,
+    limits,
+};
+use std::collections::BTreeSet;
 
 const SCHEMA_VERSION: u32 = 1;
 const KNOWN_INVARIANTS: [&str; 16] = [
@@ -7,22 +10,36 @@ const KNOWN_INVARIANTS: [&str; 16] = [
     "INV-009", "INV-010", "INV-011", "INV-012", "INV-013", "INV-014", "INV-015", "INV-016",
 ];
 
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub enum ContractError {
-    Json(String),
-    MissingIdentity,
-    UnsupportedSchema,
-    InvalidPath(String),
-    DuplicateEntry,
-    UnknownInvariant(String),
-    Mismatch,
-    OutsidePolicy,
-    MissingRequiredInvariant,
-}
-
 /// Immutable contract result, not a permit. Accessors expose shared borrows only.
+///
+/// Callers cannot fabricate or deserialize a validated result:
+/// ```compile_fail
+/// use aegis_authority::ValidatedContract;
+/// let forged = serde_json::from_str::<ValidatedContract>("{}");
+/// ```
+/// ```compile_fail
+/// use aegis_authority::{PolicyDocument, TaskDocument, ValidatedContract};
+/// fn forge(policy: PolicyDocument, task: TaskDocument) -> ValidatedContract {
+///     ValidatedContract { policy, task }
+/// }
+/// ```
+///
+/// Its authority snapshots cannot be changed through an accessor:
+/// ```compile_fail
+/// use aegis_authority::ValidatedContract;
+/// fn widen(contract: &ValidatedContract) {
+///     contract.task().scope.capabilities.clear();
+/// }
+/// ```
+/// ```compile_fail
+/// use aegis_authority::ValidatedContract;
+/// fn widen(contract: &ValidatedContract) {
+///     contract.policy().paths.read.clear();
+/// }
+/// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct ValidatedContract {
+    policy: PolicyDocument,
     task: TaskDocument,
 }
 
@@ -54,21 +71,33 @@ pub fn validate_contract(
     check_binding(policy, requested)?;
     check_approval(requested, approved)?;
     check_ceiling(policy, requested)?;
-    Ok(canonical_contract(requested))
+    Ok(canonical_contract(policy, requested))
 }
 
 impl ValidatedContract {
+    /// The exact canonical policy ceiling used for this comparison.
+    pub fn policy(&self) -> &PolicyDocument {
+        &self.policy
+    }
+
     pub fn task(&self) -> &TaskDocument {
         &self.task
     }
 }
 
 fn decode_policy(text: &str) -> Result<PolicyDocument, ContractError> {
-    json::decode(text).map_err(ContractError::Json)
+    json::decode(text).map_err(decode_error)
 }
 
 fn decode_task(text: &str) -> Result<TaskDocument, ContractError> {
-    json::decode(text).map_err(ContractError::Json)
+    json::decode(text).map_err(decode_error)
+}
+
+fn decode_error(error: json::DecodeError) -> ContractError {
+    match error {
+        json::DecodeError::Oversized => ContractError::DocumentTooLarge,
+        json::DecodeError::Invalid => ContractError::Json,
+    }
 }
 
 fn check_policy(policy: &PolicyDocument) -> Result<(), ContractError> {
@@ -137,19 +166,19 @@ fn check_paths(paths: &PathScope) -> Result<(), ContractError> {
 }
 
 fn check_path_list(paths: &[String]) -> Result<(), ContractError> {
-    check_unique(paths)?;
+    check_set_size(paths)?;
     for path in paths {
         check_path(path)?;
     }
-    Ok(())
+    check_unique(paths)
 }
 
 fn check_capabilities(capabilities: &[Capability], paths: &PathScope) -> Result<(), ContractError> {
-    check_unique(capabilities)?;
+    check_set_size(capabilities)?;
     for capability in capabilities {
         check_capability(capability, paths)?;
     }
-    Ok(())
+    check_unique(capabilities)
 }
 
 fn check_capability(capability: &Capability, paths: &PathScope) -> Result<(), ContractError> {
@@ -161,25 +190,38 @@ fn check_capability(capability: &Capability, paths: &PathScope) -> Result<(), Co
 }
 
 fn check_invariants(invariants: &[String]) -> Result<(), ContractError> {
-    check_unique(invariants)?;
+    check_set_size(invariants)?;
     for identifier in invariants {
         if !KNOWN_INVARIANTS.contains(&identifier.as_str()) {
-            return Err(ContractError::UnknownInvariant(identifier.clone()));
+            return Err(ContractError::UnknownInvariant);
         }
     }
-    Ok(())
+    check_unique(invariants)
 }
 
 fn check_text(value: &str) -> Result<(), ContractError> {
+    if limits::oversized_identity(value) {
+        return Err(ContractError::IdentityTooLong);
+    }
     if is_blank(value) {
         return Err(ContractError::MissingIdentity);
+    }
+    if invalid_identity_text(value) {
+        return Err(ContractError::InvalidIdentity);
     }
     Ok(())
 }
 
 fn check_path(path: &str) -> Result<(), ContractError> {
     if invalid_path_syntax(path) {
-        return Err(ContractError::InvalidPath(path.to_owned()));
+        return Err(ContractError::InvalidPath);
+    }
+    Ok(())
+}
+
+fn check_set_size<T>(items: &[T]) -> Result<(), ContractError> {
+    if limits::oversized_set(items) {
+        return Err(ContractError::TooManyEntries);
     }
     Ok(())
 }
@@ -191,17 +233,28 @@ fn check_unique<T: Ord + Clone>(items: &[T]) -> Result<(), ContractError> {
     Ok(())
 }
 
-fn check_subset<T: PartialEq>(requested: &[T], ceiling: &[T]) -> Result<(), ContractError> {
+fn check_subset<T: Ord>(requested: &[T], ceiling: &[T]) -> Result<(), ContractError> {
     if !is_subset(requested, ceiling) {
         return Err(ContractError::OutsidePolicy);
     }
     Ok(())
 }
 
-fn canonical_contract(task: &TaskDocument) -> ValidatedContract {
+fn canonical_contract(policy: &PolicyDocument, task: &TaskDocument) -> ValidatedContract {
     ValidatedContract {
+        policy: canonical_policy(policy),
         task: canonical_task(task),
     }
+}
+
+fn canonical_policy(policy: &PolicyDocument) -> PolicyDocument {
+    let mut result = policy.clone();
+    result.paths.read.sort();
+    result.paths.write.sort();
+    result.paths.create.sort();
+    result.capabilities.sort();
+    result.invariants.sort();
+    result
 }
 
 fn canonical_task(task: &TaskDocument) -> TaskDocument {
@@ -234,16 +287,29 @@ fn capability_in_paths(capability: &Capability, paths: &PathScope) -> bool {
 
 fn invalid_path_syntax(path: &str) -> bool {
     path.is_empty()
+        || limits::oversized_path(path)
         || path.chars().any(forbidden_path_character)
         || path.split('/').any(invalid_component)
 }
 
 fn forbidden_path_character(character: char) -> bool {
-    matches!(character, '\\' | '\0' | '*' | '?' | '[' | ']')
+    matches!(character, '\\' | '*' | '?' | '[' | ']') || unsafe_text_character(character)
 }
 
 fn invalid_component(component: &str) -> bool {
-    matches!(component, "" | "." | "..")
+    matches!(component, "" | "." | "..") || limits::oversized_component(component)
+}
+
+fn invalid_identity_text(value: &str) -> bool {
+    value != value.trim() || value.chars().any(unsafe_text_character)
+}
+
+fn unsafe_text_character(character: char) -> bool {
+    character.is_control()
+        || matches!(
+            character,
+            '\u{061c}' | '\u{200e}' | '\u{200f}' | '\u{202a}'..='\u{202e}' | '\u{2066}'..='\u{2069}'
+        )
 }
 
 fn is_blank(value: &str) -> bool {
@@ -256,14 +322,7 @@ fn has_duplicates<T: Ord + Clone>(items: &[T]) -> bool {
     ordered.windows(2).any(|pair| pair[0] == pair[1])
 }
 
-fn is_subset<T: PartialEq>(requested: &[T], ceiling: &[T]) -> bool {
+fn is_subset<T: Ord>(requested: &[T], ceiling: &[T]) -> bool {
+    let ceiling: BTreeSet<_> = ceiling.iter().collect();
     requested.iter().all(|item| ceiling.contains(item))
 }
-
-impl fmt::Display for ContractError {
-    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(formatter, "{self:?}")
-    }
-}
-
-impl std::error::Error for ContractError {}

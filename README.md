@@ -13,6 +13,9 @@ scope against independently trusted policy and human-approved scope. It does
 not authenticate those sources, issue permits, or execute actions. Public input
 types alone remain unvalidated. See the [contract reference](docs/AUTHORITY_CONTRACT.md)
 and [ADR 0003](docs/adr/0003-authority-contract.md) for the trust boundary and limits.
+The [security boundary reference](docs/SECURITY_BOUNDARY.md) records implemented
+input limits, redacted diagnostics, immutable policy/task snapshots, and the
+runtime isolation evidence still required before execution or provider access.
 
 From the repository root, with Rust installed through `rustup`, run:
 

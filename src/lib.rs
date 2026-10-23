@@ -6,13 +6,17 @@
 //! and approval data. Successful validation is not authentication or a permit.
 
 mod contract;
+mod diagnostics;
+mod error;
 mod json;
+pub mod limits;
 
-pub use contract::{ContractError, ValidatedContract, parse_policy, parse_task, validate_contract};
+pub use contract::{ValidatedContract, parse_policy, parse_task, validate_contract};
+pub use error::ContractError;
 use serde::{Deserialize, Serialize};
 
 /// Versioned policy ceiling. Its provenance must be established by the caller.
-#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct PolicyDocument {
     pub schema_version: u32,
@@ -26,7 +30,7 @@ pub struct PolicyDocument {
 }
 
 /// Versioned task declaration, not an authenticated human approval.
-#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct TaskDocument {
     pub schema_version: u32,
@@ -36,7 +40,7 @@ pub struct TaskDocument {
 }
 
 /// A declared policy reference, not verified provenance or ownership.
-#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct PolicyReference {
     pub owner: String,
@@ -45,7 +49,7 @@ pub struct PolicyReference {
 }
 
 /// A task's declared inputs, not an authenticated or validated authority set.
-#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct TaskScope {
     pub task_id: String,
@@ -59,7 +63,7 @@ pub struct TaskScope {
 }
 
 /// Separate path lists. Entries are opaque; no normalization or glob rules exist.
-#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct PathScope {
     pub read: Vec<String>,
@@ -68,7 +72,7 @@ pub struct PathScope {
 }
 
 /// Distinct declared capabilities, not issued permits or executable rights.
-#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+#[derive(Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
 pub enum Capability {
     ReadPath(String),
     WritePath(String),
@@ -77,7 +81,7 @@ pub enum Capability {
 }
 
 /// An exact-target protected-action declaration.
-#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+#[derive(Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct ProtectedGrant {
     #[serde(deserialize_with = "json::string_enum")]

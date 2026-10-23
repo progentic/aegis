@@ -6,8 +6,18 @@ use serde::de::{DeserializeOwned, MapAccess, Visitor};
 use serde::{Deserialize, Deserializer};
 use std::{fmt, marker::PhantomData};
 
-pub(crate) fn decode<T: DeserializeOwned>(text: &str) -> Result<T, String> {
-    decode_object(text).map_err(|error| error.to_string())
+#[derive(Clone, Copy)]
+pub(crate) enum DecodeError {
+    Oversized,
+    Invalid,
+}
+
+pub(crate) fn decode<T: DeserializeOwned>(text: &str) -> Result<T, DecodeError> {
+    if crate::limits::oversized_document(text) {
+        return Err(DecodeError::Oversized);
+    }
+    // Serde errors may contain unknown field names or supplied enum values.
+    decode_object(text).map_err(|_| DecodeError::Invalid)
 }
 
 fn decode_object<T: DeserializeOwned>(text: &str) -> Result<T, serde_json::Error> {
