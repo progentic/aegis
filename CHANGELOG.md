@@ -8,6 +8,7 @@ The format is based on Keep a Changelog, and this project adheres to Semantic Ve
 
 ### Added
 
+- Recorded human acceptance of the Phase 2 authority contract at its reviewed source and drafted ADR 0004 for the proposed Decision Core; no Phase 3 runtime implementation is included.
 - Bounded authority inputs, immutable full-policy/task snapshots, redacted diagnostics, and security regression checks; secret, process, network, and executable-permit inputs remain unsupported, and runtime isolation remains unimplemented.
 - Implemented the ADR 0003-approved strict JSON parser and pure policy/task/approval validator, with pinned parser dependencies, deterministic output, and rejection fixtures; runtime enforcement remains unimplemented.
 - Added a checksum-pinned GitHub Actions Lint job that must pass before foundation and Rust checks run.

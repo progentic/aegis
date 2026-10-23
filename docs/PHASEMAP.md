@@ -45,9 +45,11 @@ The phase map may change as Architecture Decision Records (ADRs) add evidence or
 
 ### Phase 2: Authority Model (`v0.1.0`)
 
-**Implementation status:** Contract implementation ready for acceptance.
-Strict parsing and pure policy/task/approval validation are implemented;
-human acceptance and runtime enforcement are not implied.
+**Implementation status:** Complete for the pure authority-contract work.
+The human accepted reviewed commit `8b1e7129ce29dc60f1da0851ccedff2a874a7902`
+on 2026-10-22. The [Phase 2 acceptance record](acceptance/PHASE-2.md) binds
+the decision to its source, checks, and trust limits. Runtime enforcement and
+production admission are outside that acceptance.
 
 **Goal:** Represent human-granted authority without inference.
 
@@ -73,6 +75,9 @@ approval inputs, not proof of a model-facing enforcement boundary.
 
 ### Phase 3: Decision Core (`v0.2.0`)
 
+**Implementation status:** Design proposed; implementation has not started.
+The human authorized drafting ADR 0004, which remains Proposed.
+
 **Goal:** Decide whether a proposed action has authority.
 
 **Work:**
@@ -85,7 +90,9 @@ approval inputs, not proof of a model-facing enforcement boundary.
 
 **Exit gate:** Table-driven tests reproduce every decision from recorded inputs and reason codes.
 
-**ADR references:** Add for outcome semantics and decision ordering.
+**ADR references:** [ADR 0004](adr/0004-decision-core.md) proposes the action
+request, trusted-check interface, outcome ordering, and reason codes. It does
+not grant implementation authority until accepted.
 
 ### Phase 4: Repository Mediation (`v0.3.0`)
 

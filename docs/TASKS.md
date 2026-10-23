@@ -6,6 +6,31 @@ This ledger records verified task results without inventing earlier project hist
 
 ## Task Results
 
+### Phase 2 — Human Acceptance
+
+**Status:** Accepted for the implemented pure authority contract on 2026-10-22.
+
+**Human authority:** "accept phase 2 and start ADR-0004". The
+[acceptance record](acceptance/PHASE-2.md) binds this instruction to commit
+`8b1e7129ce29dc60f1da0851ccedff2a874a7902`, its tree, and its passing
+[Ubuntu CI run](https://github.com/progentic/aegis/actions/runs/39885057064).
+That source passed 50 Rust checks, including four compile-failure documentation
+tests, and 32 Python foundation tests.
+
+This acceptance supersedes the earlier ready-for-acceptance status below.
+It covers strict contract validation and the subsequent input and diagnostic
+hardening. Runtime authority provenance, repository execution, isolation,
+permits, and production admission remain outside the accepted scope.
+
+### Phase 3 — Decision Core Proposal
+
+**Status:** [ADR 0004](adr/0004-decision-core.md) is Proposed.
+
+**Scope:** Draft the typed action request, complete check-report contract,
+ordered `ALLOW`, `DENY`, `STOP`, and `ESCALATE` outcomes, reason codes, and
+implementation validation matrix. The human authorized the proposal; no
+Decision Core implementation or ADR acceptance is recorded by this task.
+
 ### Phase 2 — Strict Parser and Pure Contract Validation
 
 **Implementation status:** Ready for human acceptance of the contract work;
